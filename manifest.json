@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "Coursera Auto Skipper - Skip Video, Reading, Peer Review & Discussion",
+  "short_name": "Coursera Skipper",
+  "version": "1.0.0",
+  "author": "thanh duyvp",
+  "description": "Tự động hoàn thành bài học Coursera: Skip Video 16x & API, hoàn thành Reading, tự chấm Peer Review và trả lời Thảo luận. Dev by thanh duyvp",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://www.coursera.org/*",
+    "https://*.coursera.org/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "options_page": "options/options.html",
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.coursera.org/*",
+        "https://*.coursera.org/*"
+      ],
+      "js": [
+        "shared/options-schema.js",
+        "shared/peer-score.js",
+        "shared/peer-settings.js",
+        "shared/peer-progress.js",
+        "content/instance.js",
+        "content/state.js",
+        "content/log.js",
+        "content/dom.js",
+        "content/course-map.js",
+        "content/video.js",
+        "content/reading.js",
+        "content/discussion.js",
+        "content/peer-tracker.js",
+        "content/peer-assign.js",
+        "content/peer-practice.js",
+        "content/peer-submit.js",
+        "content/peer-scan.js",
+        "content/peer-review.js",
+        "content/video-background.js",
+        "content/lesson-background.js",
+        "content/panel.js",
+        "content/runner.js",
+        "content/content.js"
+      ],
+      "css": [
+        "styles/content.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "minimum_chrome_version": "111"
+}

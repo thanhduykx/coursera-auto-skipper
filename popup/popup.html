@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coursera Auto Skipper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1 class="brand-title">Coursera Auto Skipper</h1>
+          <span class="brand-badge">dev by thanh duyvp</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="icon-btn" title="Chế độ Sáng / Tối">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button id="btn-open-options" class="icon-btn" title="Cài đặt">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Connection Banner -->
+    <div id="conn-banner" class="conn-banner offline">
+      <span class="status-dot"></span>
+      <span id="conn-text">Đang kiểm tra tab Coursera...</span>
+    </div>
+
+    <!-- Course Progress Card -->
+    <div class="progress-section">
+      <div class="progress-info">
+        <span class="progress-label">Tiến độ khóa học</span>
+        <strong id="progress-val">0%</strong>
+      </div>
+      <div class="progress-bar-track">
+        <div id="progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Main Buttons -->
+    <div class="main-actions">
+      <button id="btn-start" class="btn btn-primary" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span>Bắt đầu Auto Skip</span>
+      </button>
+      <button id="btn-stop" class="btn btn-danger" type="button" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+        </svg>
+        <span>Dừng</span>
+      </button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-chips">
+      <button id="chip-fast-skip" class="chip" title="Hoàn thành Video & Reading siêu tốc qua API">
+        ⚡ Skip Video + Reading (API)
+      </button>
+      <button id="chip-peer" class="chip" title="Chấm bài Peer Review hiện tại">
+        📝 Chấm Peer Review
+      </button>
+      <button id="chip-disc" class="chip" title="Gửi phản hồi Thảo Luận">
+        💬 Gửi Thảo luận
+      </button>
+    </div>
+
+    <!-- Feature Toggles -->
+    <section class="features-section">
+      <h2 class="section-heading">Tính Năng Tự Động</h2>
+      
+      <div class="feature-item">
+        <div class="feature-meta">
+          <span class="feat-icon feat-video">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </span>
+          <div>
+            <div class="feat-title">Auto Skip Video</div>
+            <div class="feat-desc">Tăng tốc 16x hoặc hoàn thành qua API</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-video" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-meta">
+          <span class="feat-icon feat-reading">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </span>
+          <div>
+            <div class="feat-title">Auto Skip Reading</div>
+            <div class="feat-desc">Đánh dấu hoàn thành bài đọc tự động</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-reading" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-meta">
+          <span class="feat-icon feat-peer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </span>
+          <div>
+            <div class="feat-title">Peer to Peer Review</div>
+            <div class="feat-desc">Tự chấm điểm rubric, điền nhận xét và nộp</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-peer" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-meta">
+          <span class="feat-icon feat-discussion">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </span>
+          <div>
+            <div class="feat-title">Discussion Prompt</div>
+            <div class="feat-desc">Tự động điền phản hồi thảo luận và gửi</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-discussion" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Live Status / Log box -->
+    <div class="log-box">
+      <div class="log-title">Trạng thái gần nhất</div>
+      <div id="status-message" class="status-message">Sẵn sàng</div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <span>v1.0.0</span>
+      <a href="https://github.com/thanhduykx/coursera-auto-skipper" target="_blank" rel="noopener noreferrer">
+        dev by thanh duyvp
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

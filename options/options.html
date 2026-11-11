@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cài Đặt - Coursera Auto Skipper</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-wrapper">
+    <!-- Header -->
+    <header class="options-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Coursera Auto Skipper</h1>
+          <p class="subtitle">Bảng cấu hình tiện ích tự động hóa Coursera · <span class="author-tag">dev by thanh duyvp</span></p>
+        </div>
+      </div>
+      <div class="header-status" id="save-status">
+        <span class="status-indicator"></span>
+        <span id="save-status-text">Cài đặt đã đồng bộ</span>
+      </div>
+    </header>
+
+    <main class="options-main">
+      <!-- Section 1: Video & Reading -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-icon icon-video">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Cấu hình Auto Skip Video & Reading</h2>
+            <p>Tối ưu tốc độ và cơ chế hoàn thành bài học</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-video-mode">Phương thức xử lý Video:</label>
+          <select id="cfg-video-mode" class="form-control">
+            <option value="batch">API siêu tốc (Khuyến nghị - Gửi sự kiện trực tiếp tới Coursera)</option>
+            <option value="player">Tua player 16x (Chạy trong trang với trình phát video)</option>
+          </select>
+          <span class="help-text">Chế độ API giúp bạn không cần phải mở từng video hoặc chờ video chạy hết thời gian.</span>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-video-speed">Tốc độ tua khi xem video trong Player:</label>
+          <select id="cfg-video-speed" class="form-control">
+            <option value="16">16x (Tối đa, nhanh nhất)</option>
+            <option value="8">8x</option>
+            <option value="4">4x</option>
+            <option value="2">2x</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Section 2: Peer Review -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-icon icon-peer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Cấu hình Peer to Peer Review</h2>
+            <p>Quy tắc chấm bài ngang hàng và mẫu nhận xét tự động</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-peer-mode">Chiến lược chọn điểm tiêu chí (Rubric):</label>
+          <select id="cfg-peer-mode" class="form-control">
+            <option value="highest">Điểm cao nhất (Max Score - Giúp bạn học đạt điểm tối đa)</option>
+            <option value="last">Mục cuối cùng mỗi tiêu chí</option>
+            <option value="keep">Giữ nguyên điểm đã chọn thủ công</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-peer-comment">Mẫu nội dung nhận xét bài làm:</label>
+          <textarea id="cfg-peer-comment" class="form-control textarea" rows="3" placeholder="Nhập nhận xét..."></textarea>
+          <span class="help-text">Nhận xét này sẽ được tự động điền vào các ô nhận xét bắt buộc của biểu mẫu chấm bài.</span>
+        </div>
+
+        <div class="form-row checkbox-row">
+          <label class="checkbox-container">
+            <input type="checkbox" id="cfg-peer-autosubmit">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">Tự động nộp bài đánh giá và chuyển sang lượt chấm tiếp theo</span>
+          </label>
+        </div>
+
+        <div class="form-row checkbox-row">
+          <label class="checkbox-container">
+            <input type="checkbox" id="cfg-peer-scan">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">Tự động quét danh mục toàn khóa học để hoàn thành tất cả bài Peer Review</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Section 3: Discussion Prompt -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-icon icon-disc">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Cấu hình Thảo Luận (Discussion Prompt)</h2>
+            <p>Nội dung phản hồi tự động trong các diễn đàn bài học</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-disc-comment">Mẫu phản hồi thảo luận:</label>
+          <textarea id="cfg-disc-comment" class="form-control textarea" rows="3" placeholder="Nhập câu phản hồi thảo luận..."></textarea>
+          <span class="help-text">Nội dung sẽ được điền vào ô thảo luận khi gặp trang Discussion Prompt.</span>
+        </div>
+
+        <div class="form-row checkbox-row">
+          <label class="checkbox-container">
+            <input type="checkbox" id="cfg-disc-autosubmit">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">Tự động bấm Reply sau khi điền nội dung</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Section 4: General Settings -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-icon icon-general">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Cài Đặt Chung & Giao Diện</h2>
+            <p>Khởi động tự động và chế độ hiển thị</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="cfg-theme">Chế độ giao diện (Theme):</label>
+          <select id="cfg-theme" class="form-control">
+            <option value="auto">Tự động (Theo cài đặt hệ thống)</option>
+            <option value="light">Sáng (Light Mode)</option>
+            <option value="dark">Tối (Dark Mode)</option>
+          </select>
+        </div>
+
+        <div class="form-row checkbox-row">
+          <label class="checkbox-container">
+            <input type="checkbox" id="cfg-autostart">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">Tự động kích hoạt khi mở trang khóa học Coursera</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Action Footer -->
+      <div class="save-bar">
+        <button id="btn-save" class="btn btn-save" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Lưu Tất Cả Cài Đặt
+        </button>
+      </div>
+
+      <!-- About Footer -->
+      <footer class="about-card">
+        <h3>Coursera Auto Skipper v1.0.0</h3>
+        <p>Tiện ích mã nguồn mở hỗ trợ học tập trên Coursera. Tự động hóa Video, Reading, Peer Review và Thảo luận.</p>
+        <div class="about-links">
+          <span>Tác giả: <strong>thanh duyvp</strong></span>
+          <span>·</span>
+          <a href="https://github.com/thanhduykx/coursera-auto-skipper" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <span>·</span>
+          <span>Giấy phép: MIT License</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <div id="toast" class="toast">Đã lưu cài đặt thành công!</div>
+
+  <script src="options.js"></script>
+</body>
+</html>
