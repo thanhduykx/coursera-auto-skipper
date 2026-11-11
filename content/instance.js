@@ -8,6 +8,7 @@
   const cleanups = new Set();
 
   globalThis.Skipper = {
+    ...(globalThis.Skipper || {}),
     instance: {
       signal: controller.signal,
       addCleanup(fn) {

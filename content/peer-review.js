@@ -24,7 +24,7 @@
   function scan() {
     const parts = [...document.querySelectorAll(".rc-FormPart")].filter(
       (part) =>
-        !part.closest("#skipper-pro-panel") && part.getClientRects().length,
+        !ROOT.dom.inPanel(part) && part.getClientRects().length,
     );
     if (parts.length > 100) throw new Error("Biểu mẫu vượt giới hạn 100 phần.");
     return parts
@@ -296,7 +296,7 @@
       return null;
     return [...document.querySelectorAll('button,[role="button"]')].find(
       (button) =>
-        !button.closest("#skipper-pro-panel") &&
+        !ROOT.dom.inPanel(button) &&
         button.getClientRects().length &&
         !button.matches(":disabled") &&
         button.getAttribute("aria-disabled") !== "true" &&
@@ -409,7 +409,7 @@
   }
   function prerequisiteReason() {
     const pageText = text(document.body).replace(
-      text(document.getElementById("skipper-pro-panel")),
+      text(document.getElementById("skipper-auto-panel")),
       "",
     );
     if (

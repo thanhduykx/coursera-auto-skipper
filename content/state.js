@@ -40,8 +40,10 @@
 
   ROOT.state = {
     DEFAULT_OPTIONS: schema.DEFAULTS.options,
-    getOptions: schema.readAll,
+    getOptions: schema.readOptions,
     saveOptions: schema.writeOptions,
+    getSettings: schema.readAll,
+    saveSettings: schema.writeAll,
     getRun: () => request("RUN_GET"),
     saveRun: (patch) => request("RUN_SAVE", patch),
     resetRun: () => request("RUN_RESET"),

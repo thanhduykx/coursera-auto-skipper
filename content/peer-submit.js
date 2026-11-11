@@ -4,7 +4,7 @@
   const submitted = new WeakSet();
   const submittedIdentities = new Set();
   const visible = (node) =>
-    node.getClientRects().length && !node.closest("#skipper-pro-panel");
+    node.getClientRects().length && !ROOT.dom.inPanel(node);
   const text = (node) => (node?.innerText || "").replace(/\s+/g, " ").trim();
   function identity() {
     const main = document.querySelector("#main-container,.main-container,main");

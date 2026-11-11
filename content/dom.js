@@ -5,8 +5,9 @@
 (() => {
   const ROOT = (globalThis.Skipper = globalThis.Skipper || {});
 
-  /** The floating panel lives on the page; automation must never touch it. */
-  const PANEL_ID = "skipper-pro-panel";
+  /** The floating panel & pill live on the page; automation must never touch them. */
+  const PANEL_ID = "skipper-auto-panel";
+  const PILL_ID = "skipper-auto-pill";
 
   function assertActive(context = {}) {
     const signal = context.signal || ROOT.instance?.signal;
@@ -74,7 +75,11 @@
   }
 
   function inPanel(el) {
-    return Boolean(el && el.closest && el.closest("#" + PANEL_ID));
+    return Boolean(
+      el &&
+      el.closest &&
+      (el.closest("#" + PANEL_ID) || el.closest("#" + PILL_ID))
+    );
   }
 
   function queryAll(selectors, scope) {

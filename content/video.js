@@ -69,12 +69,17 @@
 
   /** Coursera's player resets playbackRate, so re-apply it a few times. */
   async function boostPlaybackRate(video, context = {}) {
+    let targetSpeed = MAX_RATE;
+    try {
+      const allSettings = await globalThis.SkipperOptions?.readAll?.().catch(() => null);
+      if (allSettings?.videoSpeed) targetSpeed = Number(allSettings.videoSpeed) || MAX_RATE;
+    } catch {}
     for (let attempt = 0; attempt < 3; attempt += 1) {
       dom.assertActive(context);
       try {
         video.muted = true;
         video.volume = 0;
-        video.playbackRate = MAX_RATE;
+        video.playbackRate = targetSpeed;
       } catch (err) {
         /* non-fatal: some players lock these properties */
       }
@@ -97,7 +102,9 @@
   }
 
   function hasReachedEnd(video) {
-    return video.ended === true;
+    if (video.ended === true) return true;
+    const duration = Number(video.duration);
+    return Number.isFinite(duration) && duration > 0 && video.currentTime >= duration - 0.25;
   }
 
   async function waitForEnd(video, context = {}) {

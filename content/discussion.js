@@ -28,7 +28,11 @@
 
   async function getDraftText() {
     try {
-      const config = await ROOT.state?.getOptions?.();
+      const allSettings = await globalThis.SkipperOptions?.readAll?.().catch(() => null);
+      if (allSettings?.discussionComment && typeof allSettings.discussionComment === "string" && allSettings.discussionComment.trim()) {
+        return allSettings.discussionComment.trim();
+      }
+      const config = await (ROOT.state?.getSettings?.() || ROOT.state?.getOptions?.());
       if (config?.discussionComment && typeof config.discussionComment === "string" && config.discussionComment.trim()) {
         return config.discussionComment.trim();
       }
@@ -206,13 +210,15 @@
           [
             '[aria-label="Success: Response submitted"]',
             '[data-testid="discussion-submission-success"]',
+            '[class*="success" i]',
+            '[role="alert"]',
           ],
           main,
         )
         .some(
           (node) =>
             dom.visible(node) &&
-            /response submitted|đã gửi phản hồi/i.test(dom.textOf(node)),
+            /response submitted|reply submitted|đã gửi phản hồi|thành công/i.test(dom.textOf(node)),
         )
     );
   }
@@ -232,8 +238,25 @@
         status: "review",
         message: "Lượt gửi trước chưa được xác nhận; dừng để tránh gửi trùng.",
       };
-    if (!(await draftDiscussion(context))) return { status: "failed" };
+    const draftFn = ROOT.discussion?.draftDiscussion || draftDiscussion;
+    if (!(await draftFn(context))) return { status: "failed" };
     dom.assertActive(context);
+
+    let autoSubmit = true;
+    try {
+      const allSettings = await globalThis.SkipperOptions?.readAll?.().catch(() => null);
+      if (allSettings && allSettings.discussionAutoSubmit === false) {
+        autoSubmit = false;
+      }
+    } catch {}
+
+    if (!autoSubmit) {
+      log.log("Đã điền bản nháp thảo luận. Tính năng tự nộp đang tắt; bạn hãy kiểm tra và nhấn Reply.", "info");
+      return {
+        status: "review",
+        message: "Đã soạn xong thảo luận; chờ bạn bấm Reply.",
+      };
+    }
 
     const editor = findEditor();
     const currentText = editorText(editor);

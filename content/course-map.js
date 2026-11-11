@@ -187,7 +187,7 @@
 
     const targets = toggles.filter(
       (toggle) =>
-        !toggle.closest("#skipper-pro-panel") &&
+        !dom.inPanel(toggle) &&
         /(?:module\s*\d|week\s*(?:\d|one|two|three|four|five|six)|lesson\s*\d|tuần\s*\d|chương\s*\d)/i.test(
           dom.textOf(toggle),
         ),

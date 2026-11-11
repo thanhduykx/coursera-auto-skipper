@@ -16,7 +16,7 @@
 
   /** Strict: must be the completion control itself, not a nav "Continue" link. */
   const COMPLETE_TEXT =
-    /^(mark as complete|mark complete|mark this item as complete|đánh dấu là đã hoàn thành|đánh dấu hoàn thành|đánh dấu bài học đã hoàn thành|hoàn thành bài học)$/i;
+    /^(mark as completed?|mark completed?|mark this item as completed?|đánh dấu là đã hoàn thành|đánh dấu hoàn thành|đánh dấu bài học đã hoàn thành|hoàn thành bài học)$/i;
 
   const DONE_TEXT = /(completed|already complete|đã hoàn thành)/i;
 

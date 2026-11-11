@@ -249,7 +249,7 @@
 
     // Options page button
     panel.querySelector("#sp-options-btn")?.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ action: "OPEN_OPTIONS" });
+      chrome.runtime.sendMessage({ type: "OPEN_OPTIONS" });
     });
 
     // Tabs
@@ -401,15 +401,20 @@
     const panel = document.getElementById(PANEL_ID);
     if (!panel) return;
     try {
-      const config = await state.getOptions();
-      if (config?.options) {
-        for (const [key, val] of Object.entries(config.options)) {
+      const opts = await state.getOptions();
+      const featureOpts = opts?.options || opts;
+      if (featureOpts) {
+        for (const [key, val] of Object.entries(featureOpts)) {
           const el = panel.querySelector(`#sp-opt-${key}`);
           if (el) el.checked = val === true;
         }
       }
-      if (config?.theme === "dark" || (config?.theme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      const allSettings = await globalThis.SkipperOptions?.readAll().catch(() => null);
+      const currentTheme = allSettings?.theme || "auto";
+      if (currentTheme === "dark" || (currentTheme === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
         panel.classList.add("dark");
+      } else {
+        panel.classList.remove("dark");
       }
 
       if (globalThis.SkipperPeerSettings) {
@@ -430,7 +435,10 @@
     const panel = document.getElementById(PANEL_ID);
     if (!panel) return;
     const isDark = panel.classList.toggle("dark");
-    state.saveOptions({ theme: isDark ? "dark" : "light" }).catch(() => {});
+    chrome.runtime.sendMessage({
+      type: "SAVE_SETTINGS",
+      settings: { theme: isDark ? "dark" : "light" },
+    }).catch(() => {});
   }
 
   function setProgress(percent) {
@@ -473,6 +481,8 @@
   }
 
   ROOT.panel = {
+    PANEL_ID,
+    PILL_ID,
     mount,
     setProgress,
     setStatus,

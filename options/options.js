@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const generalPatch = {
         videoMode: cfgVideoMode.value,
         videoSpeed: Number(cfgVideoSpeed.value),
-        discussionComment: cfgPeerComment.value ? cfgDiscComment.value : "",
+        discussionComment: cfgDiscComment ? cfgDiscComment.value.trim() : "",
         discussionAutoSubmit: cfgDiscAutosubmit.checked,
         theme: cfgTheme.value,
         autoStart: cfgAutostart.checked,

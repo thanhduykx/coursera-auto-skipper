@@ -19,7 +19,7 @@
     const seen = new Set();
     return [...document.querySelectorAll('a[href*="/peer/"]')].flatMap(
       (anchor) => {
-        if (anchor.closest("#skipper-pro-panel")) return [];
+        if (ROOT.dom.inPanel(anchor)) return [];
         const item = ROOT.courseMap.parse(anchor.href);
         const label = anchor.getAttribute("aria-label") || "";
         const practice = /Practice Peer-graded Assignment/i.test(label);
@@ -88,7 +88,7 @@
         );
         const links = [...document.querySelectorAll('a[href*="/learn/"]')].some(
           (anchor) => {
-            if (main?.contains(anchor) || anchor.closest("#skipper-pro-panel"))
+            if (main?.contains(anchor) || ROOT.dom.inPanel(anchor))
               return false;
             const item = ROOT.courseMap.parse(anchor.href);
             return (
@@ -101,7 +101,7 @@
           links ||
           [...document.querySelectorAll("button[aria-expanded]")].some(
             (button) =>
-              !button.closest("#skipper-pro-panel") &&
+              !ROOT.dom.inPanel(button) &&
               button.getClientRects().length &&
               /module\s*\d|week\s*(?:\d|one|two)|lesson\s*\d/i.test(
                 button.innerText,

@@ -84,14 +84,16 @@
     };
   }
   function optionForKind(kind, options) {
-    if (kind === "peer") return options.peer === true;
+    if (!options) return false;
+    const opts = options.options || options;
+    if (kind === "peer") return opts.peer === true;
     if (
       kind === "programming" ||
       kind === "widget" ||
       kind === "lab"
     )
-      return options.lab === true;
-    return options[kind] === true;
+      return opts.lab === true;
+    return opts[kind] === true;
   }
   async function processPeer(options, context = {}, item = {}) {
     if (!options.peer) return { status: "skipped" };
@@ -206,20 +208,29 @@
   }
   async function processItem(item, options, context = {}) {
     dom.assertActive?.(context);
-    if (!optionForKind(item.kind, options)) return { status: "skipped" };
-    if (item.kind === "peer") return processPeer(options, context, item);
+    const opts = options?.options || options || {};
+    if (!optionForKind(item.kind, opts)) return { status: "skipped" };
+    if (item.kind === "peer") return processPeer(opts, context, item);
+    const allSettings = await globalThis.SkipperOptions?.readAll().catch(() => null);
+    const isPlayerVideo = allSettings?.videoMode === "player";
     if (
       ROOT.lessonBackground &&
       ["reading", "video", "lab"].includes(item.kind)
-    )
+    ) {
+      if (item.kind === "video" && isPlayerVideo) {
+        return {
+          status: (await video.skipVideos(context)) ? "processed" : "failed",
+        };
+      }
       return {
         status: ROOT.lessonBackground.confirmed.includes(item.key)
           ? "processed"
           : "failed",
       };
+    }
     switch (item.kind) {
       case "video":
-        if (ROOT.videoBackground)
+        if (ROOT.videoBackground && !isPlayerVideo)
           return {
             status: ROOT.videoBackground.confirmed.includes(item.key)
               ? "processed"
@@ -595,8 +606,9 @@
     activeRunId = crypto.randomUUID();
     try {
       const merged = await state.saveOptions(options);
+      const opts = merged?.options || merged || {};
       assert();
-      if (merged.peer && globalThis.SkipperPeerSettings) {
+      if (opts.peer && globalThis.SkipperPeerSettings) {
         const peer = await globalThis.SkipperPeerSettings.read();
         if (!peer.enabled)
           await globalThis.SkipperPeerSettings.write({ enabled: true });
@@ -625,11 +637,14 @@
         startedAt: Date.now(),
       });
       assert();
-      if ((merged.video || merged.reading || merged.lab) && ROOT.lessonBackground) {
+      const allSettings = await globalThis.SkipperOptions?.readAll().catch(() => null);
+      const isPlayerVideo = allSettings?.videoMode === "player";
+      const runVideoApi = opts.video === true && !isPlayerVideo;
+      if ((runVideoApi || opts.reading || opts.lab) && ROOT.lessonBackground) {
         const result = await ROOT.lessonBackground.start({
-          video: merged.video,
-          reading: merged.reading,
-          lab: merged.lab,
+          video: runVideoApi,
+          reading: opts.reading === true,
+          lab: opts.lab === true,
           signal: controller.signal,
         });
         assert();
@@ -643,8 +658,8 @@
           log.log(result.message, "success");
         else {
           const more = ["peer", "discussion"].some(
-            (key) => merged[key],
-          );
+            (key) => opts[key],
+          ) || (opts.video && isPlayerVideo);
           if (!more) throw new Error(result.message);
           log.log(
             result.message + " Vẫn tiếp tục các bài còn lại của khóa.",
@@ -653,13 +668,13 @@
         }
         if (
           !["peer", "discussion"].some(
-            (key) => merged[key],
-          )
+            (key) => opts[key],
+          ) && !(opts.video && isPlayerVideo)
         ) {
           await finish(result.message + " Giữ nguyên trang hiện tại.");
           return;
         }
-      } else if (merged.video && ROOT.videoBackground) {
+      } else if (opts.video && !isPlayerVideo && ROOT.videoBackground) {
         const success = await ROOT.videoBackground.start({
           integrated: true,
           signal: controller.signal,

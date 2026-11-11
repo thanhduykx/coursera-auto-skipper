@@ -238,6 +238,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       options: await self.SkipperOptions.writeOptions(msg.patch || {}),
     }));
 
+  if (
+    (msg.type === "OPEN_OPTIONS" || msg.action === "OPEN_OPTIONS") &&
+    (page || course)
+  )
+    return respond(async () => {
+      await chrome.runtime.openOptionsPage();
+      return { ok: true };
+    });
+
   if (!course) return false;
   const tabId = sender.tab.id;
 

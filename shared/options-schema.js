@@ -111,25 +111,35 @@
     return normalize(result.settings);
   }
 
-  async function writeOptions(patch) {
+  async function readOptions() {
+    const all = await readAll();
+    return all.options;
+  }
+
+  async function writeOptions(patch = {}) {
     if (worker) {
       const current = await readLocal();
-      return writeLocal({ options: { ...current.options, ...patch } });
+      const updated = await writeLocal({
+        options: { ...current.options, ...patch },
+      });
+      return updated.options;
     }
     const result = await chrome.runtime.sendMessage({
       type: "UPDATE_OPTIONS",
       patch,
     });
     if (!result?.ok) throw new Error(result?.error || "Không cập nhật được tùy chọn");
-    return normalize(result.options);
+    return mergeOptions(result.options);
   }
 
   self.SkipperOptions = {
     DEFAULTS,
     FEATURE_KEYS,
     normalize,
+    mergeOptions,
     readAll,
     writeAll,
+    readOptions,
     writeOptions,
   };
 })();
